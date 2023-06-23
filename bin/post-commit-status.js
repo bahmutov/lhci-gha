@@ -7,6 +7,7 @@ const debug = require('debug')('lhci-gha')
 const { getPerformance } = require('../src/read-report')
 const { evalEmoji100 } = require('../src/emoji')
 const { setGitHubCommitStatus } = require('../src/post-commit-status')
+const { isValidStatus } = require('../src/status')
 
 const args = arg({
   '--owner': String,
@@ -43,8 +44,6 @@ if (!args['--min']) {
   args['--min'] = 70
   console.log('Set minimum performance number to 70')
 }
-
-const validStatuses = ['pending', 'success', 'failure', 'error']
 
 function checkEnvVariables(env) {
   if (!env.GITHUB_TOKEN && !env.PERSONAL_GH_TOKEN) {
@@ -89,8 +88,8 @@ const envOptions = {
 }
 
 if (performance < args['--min']) {
-  options.status = 'failed'
-  options.description = `Performance ${performance}is worse than minimum ${args['--min']}`
+  options.status = 'failure'
+  options.description = `Performance ${performance} is worse than minimum ${args['--min']}`
 } else {
   options.status = 'success'
   options.description = `Performance ${performance}`
@@ -99,7 +98,7 @@ if (performance < args['--min']) {
 const performanceEmoji = evalEmoji100(performance)
 console.log(`%s %s`, options.description, performanceEmoji)
 
-if (!validStatuses.includes(options.status)) {
+if (!isValidStatus(options.status)) {
   throw new Error(`invalid status ${options.status}`)
 }
 setGitHubCommitStatus(options, envOptions)
