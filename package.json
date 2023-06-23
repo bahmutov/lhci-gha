@@ -1,0 +1,39 @@
+{
+  "name": "lhci-gha",
+  "version": "1.0.0",
+  "description": "Lighthouse CI results reporting GitHub Action",
+  "files": [
+    "bin",
+    "src"
+  ],
+  "bin": {
+    "post-summary": "./bin/post-summary.js",
+    "post-status": "./bin/post-commit-status.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmutov/lhci-gha.git"
+  },
+  "keywords": [
+    "lighthouse",
+    "github-action"
+  ],
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahmutov/lhci-gha/issues"
+  },
+  "homepage": "https://github.com/bahmutov/lhci-gha#readme",
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "arg": "^5.0.2",
+    "debug": "^4.3.4",
+    "got": "^11.8.6"
+  }
+}
