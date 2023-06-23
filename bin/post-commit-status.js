@@ -89,7 +89,7 @@ const envOptions = {
 
 if (performance < args['--min']) {
   options.status = 'failure'
-  options.description = `Performance ${performance} is worse than minimum ${args['--min']}`
+  options.description = `Performance ${performance} < ${args['--min']} min`
 } else {
   options.status = 'success'
   options.description = `Performance ${performance}`
