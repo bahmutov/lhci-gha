@@ -1,9 +1,5 @@
 const got = require('got')
 const debug = require('debug')('lhci-gha')
-const { getPerformance } = require('./read-report')
-const { evalEmoji100 } = require('./emoji')
-
-const validStatuses = ['pending', 'success', 'failure', 'error']
 
 /**
  * Sets GitHub commit status. Handles any GH errors and prints them to STDERR.

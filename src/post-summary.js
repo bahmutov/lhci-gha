@@ -1,7 +1,8 @@
 // @ts-check
 const ghCore = require('@actions/core')
-const results = require('./lighthouse-results.json')
-const { evalEmojiUnit } = require('./utils/emoji')
+const { evalEmojiUnit } = require('./emoji')
+const fs = require('fs')
+
 const metrics = [
   'first-contentful-paint',
   'interactive',
@@ -11,38 +12,48 @@ const metrics = [
   'cumulative-layout-shift',
 ]
 
-const rows = []
+/**
+ * Reads Lighthouse JSON report and posts the main metrics
+ * to GitHub job summary
+ * @param {string} filename The path to the JSON report file
+ */
+function postSummary(filename) {
+  const results = JSON.parse(fs.readFileSync(filename, 'utf8'))
+  const rows = []
 
-metrics.forEach((key) => {
-  const audit = results.audits[key]
-  // be safe and always push strings
-  rows.push([
-    audit.title,
-    String(audit.displayValue),
-    evalEmojiUnit(audit.score),
-  ])
-})
+  metrics.forEach((key) => {
+    const audit = results.audits[key]
+    // be safe and always push strings
+    rows.push([
+      audit.title,
+      String(audit.displayValue),
+      evalEmojiUnit(audit.score),
+    ])
+  })
 
-// add the final performance score
-const performanceAudit = results.categories.performance
-const performance = performanceAudit.score * 100
-const performanceSymbol = evalEmojiUnit(performanceAudit.score)
-rows.push([performanceAudit.title, String(performance), performanceSymbol])
+  // add the final performance score
+  const performanceAudit = results.categories.performance
+  const performance = performanceAudit.score * 100
+  const performanceSymbol = evalEmojiUnit(performanceAudit.score)
+  rows.push([performanceAudit.title, String(performance), performanceSymbol])
 
-console.table(rows)
+  console.table(rows)
 
-ghCore.summary
-  .addHeading(`Lighthouse Performance ${performance} ${performanceSymbol}`)
-  .addTable([
-    [
-      { data: 'Metric', header: true },
-      { data: 'Time', header: true },
-      { data: 'Eval', header: true },
-    ],
-    ...rows,
-  ])
-  .addLink(
-    'Trying Lighthouse',
-    'https://glebbahmutov.com/blog/trying-lighthouse/',
-  )
-  .write()
+  ghCore.summary
+    .addHeading(`Lighthouse Performance ${performance} ${performanceSymbol}`)
+    .addTable([
+      [
+        { data: 'Metric', header: true },
+        { data: 'Time', header: true },
+        { data: 'Eval', header: true },
+      ],
+      ...rows,
+    ])
+    .addLink(
+      'Trying Lighthouse',
+      'https://glebbahmutov.com/blog/trying-lighthouse/',
+    )
+    .write()
+}
+
+module.exports = { postSummary }

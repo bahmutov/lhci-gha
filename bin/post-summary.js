@@ -2,50 +2,22 @@
 
 // @ts-check
 
-const ghCore = require('@actions/core')
-const results = require('./lighthouse-results.json')
-const { evalEmojiUnit } = require('./utils/emoji')
-const metrics = [
-  'first-contentful-paint',
-  'interactive',
-  'speed-index',
-  'total-blocking-time',
-  'largest-contentful-paint',
-  'cumulative-layout-shift',
-]
+const arg = require('arg')
+const debug = require('debug')('lhci-gha')
+const { postSummary } = require('../src/post-summary')
 
-const rows = []
+const args = arg({
+  // Lighthouse performance JSON filename
+  '--report-filename': String,
 
-metrics.forEach((key) => {
-  const audit = results.audits[key]
-  // be safe and always push strings
-  rows.push([
-    audit.title,
-    String(audit.displayValue),
-    evalEmojiUnit(audit.score),
-  ])
+  // alias
+  '-f': '--report-filename',
 })
+debug('args %o', args)
 
-// add the final performance score
-const performanceAudit = results.categories.performance
-const performance = performanceAudit.score * 100
-const performanceSymbol = evalEmojiUnit(performanceAudit.score)
-rows.push([performanceAudit.title, String(performance), performanceSymbol])
+if (!args['--report-filename']) {
+  console.error('Missing --report-filename')
+  process.exit(1)
+}
 
-console.table(rows)
-
-ghCore.summary
-  .addHeading(`Lighthouse Performance ${performance} ${performanceSymbol}`)
-  .addTable([
-    [
-      { data: 'Metric', header: true },
-      { data: 'Time', header: true },
-      { data: 'Eval', header: true },
-    ],
-    ...rows,
-  ])
-  .addLink(
-    'Trying Lighthouse',
-    'https://glebbahmutov.com/blog/trying-lighthouse/',
-  )
-  .write()
+postSummary(args['--report-filename'])
