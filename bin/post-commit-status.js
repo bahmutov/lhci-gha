@@ -67,7 +67,7 @@ const options = {
   commit: args['--commit'] || commitSha,
   // status fields
   status: args['--status'],
-  description: args['--description'] || 'Fast enough',
+  description: args['--description'] || 'Performance',
   targetUrl: args['--target-url'],
   context: args['--context'] || 'Lighthouse',
 }
@@ -89,10 +89,10 @@ const envOptions = {
 
 if (performance < args['--min']) {
   options.status = 'failure'
-  options.description = `Performance ${performance} < ${args['--min']} min`
+  options.description = `${options.description} ${performance} < ${args['--min']} min`
 } else {
   options.status = 'success'
-  options.description = `Performance ${performance}`
+  options.description = `${options.description} ${performance}`
 }
 
 const performanceEmoji = evalEmoji100(performance)
