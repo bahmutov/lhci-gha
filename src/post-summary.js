@@ -16,7 +16,7 @@ const metrics = [
  * Reads Lighthouse JSON report and posts the main metrics
  * to GitHub job summary
  * @param {string} filename The path to the JSON report file
- * @param {string?} title Optional summary title to use
+ * @param {string|undefined} title Optional summary title to use
  */
 function postSummary(filename, title) {
   title = title || 'Lighthouse Performance'
