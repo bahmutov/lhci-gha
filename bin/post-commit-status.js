@@ -32,6 +32,7 @@ const args = arg({
   '-c': '--commit',
   '--sha': '--commit',
   '-s': '--status',
+  '--url': '--target-url',
 })
 debug('args %o', args)
 
