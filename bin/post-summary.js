@@ -9,6 +9,8 @@ const { postSummary } = require('../src/post-summary')
 const args = arg({
   // Lighthouse performance JSON filename
   '--report-filename': String,
+  // summary table title
+  '--title': String,
 
   // alias
   '-f': '--report-filename',
@@ -20,4 +22,4 @@ if (!args['--report-filename']) {
   process.exit(1)
 }
 
-postSummary(args['--report-filename'])
+postSummary(args['--report-filename'], args['--title'])

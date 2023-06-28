@@ -16,8 +16,10 @@ const metrics = [
  * Reads Lighthouse JSON report and posts the main metrics
  * to GitHub job summary
  * @param {string} filename The path to the JSON report file
+ * @param {string?} title Optional summary title to use
  */
-function postSummary(filename) {
+function postSummary(filename, title) {
+  title = title || 'Lighthouse Performance'
   const results = JSON.parse(fs.readFileSync(filename, 'utf8'))
   const rows = []
 
@@ -40,7 +42,7 @@ function postSummary(filename) {
   console.table(rows)
 
   ghCore.summary
-    .addHeading(`Lighthouse Performance ${performance} ${performanceSymbol}`)
+    .addHeading(`${title} ${performance} ${performanceSymbol}`)
     .addTable([
       [
         { data: 'Metric', header: true },
