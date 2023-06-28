@@ -35,7 +35,7 @@ function postSummary(filename, title) {
 
   // add the final performance score
   const performanceAudit = results.categories.performance
-  const performance = performanceAudit.score * 100
+  const performance = Math.round(performanceAudit.score * 100)
   const performanceSymbol = evalEmojiUnit(performanceAudit.score)
   rows.push([performanceAudit.title, String(performance), performanceSymbol])
 
