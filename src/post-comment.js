@@ -15,6 +15,27 @@ const metrics = [
 ]
 
 /**
+ * @param {Octokit} octokit
+ */
+async function getComments(octokit, options) {
+  const result = await octokit.rest.issues.listComments({
+    owner: options.owner,
+    repo: options.repo,
+    issue_number: options.issue,
+  })
+  console.log(result)
+  if (result.status !== 200) {
+    throw new Error(
+      `Could not get comments ${options.owner}/${options.repo} issue/pr ${options.issue}`,
+    )
+  }
+
+  return result.data.map((item) => {
+    return { id: item.id, body: item.body }
+  })
+}
+
+/**
  * Posts a comment with Lighthouse performance results
  * @see https://docs.github.com/en/rest/issues/comments?apiVersion=2022-11-28
  */
@@ -52,17 +73,52 @@ async function postComment(options, envOptions) {
   }
 
   const octokit = new Octokit({ auth: envOptions.token })
-  const result = await octokit.rest.issues.createComment({
-    owner: options.owner,
-    repo: options.repo,
-    issue_number: options.issue,
-    body: options.body,
-  })
-  if (result.status === 201) {
-    console.log('Comment posted %s', result.data.html_url)
+
+  const comments = await getComments(octokit, options)
+  debug(
+    'found %d comments on issue %s/%s pr %d',
+    comments.length,
+    options.owner,
+    options.repo,
+    options.issue,
+  )
+  debug(comments)
+
+  const title = options.title || 'Lighthouse performance'
+  const foundComment = comments.find(
+    (comment) => comment.body && comment.body.startsWith('**' + title),
+  )
+  if (foundComment) {
+    console.log(
+      'Found existing performance comment %d, updating',
+      foundComment.id,
+    )
+    const result = await octokit.rest.issues.updateComment({
+      owner: options.owner,
+      repo: options.repo,
+      comment_id: foundComment.id,
+      issue_number: options.issue,
+      body: options.body,
+    })
+    if (result.status !== 200) {
+      console.error('problem updating the comment')
+      console.error(result)
+    } else {
+      console.log('Comment updated %s', result.url)
+    }
   } else {
-    console.error('problem posting a comment')
-    console.error(result)
+    const result = await octokit.rest.issues.createComment({
+      owner: options.owner,
+      repo: options.repo,
+      issue_number: options.issue,
+      body: options.body,
+    })
+    if (result.status === 201) {
+      console.log('Comment posted %s', result.data.html_url)
+    } else {
+      console.error('problem posting a comment')
+      console.error(result)
+    }
   }
 }
 
