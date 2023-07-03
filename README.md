@@ -4,6 +4,42 @@
 
 📝 Read the blog post [Trying Lighthouse](https://glebbahmutov.com/blog/trying-lighthouse/).
 
+## Install
+
+Add this module as a dev dependency
+
+```
+# install using NPM
+$ npm i -D lhci-gha
+# install using Yarn
+$ yarn add -D lhci-gha
+```
+
+## Scripts
+
+This module provides 2 command line scripts. You should use these scripts _after_ running Lighthouse CI
+
+```yml
+# https://github.com/GoogleChrome/lighthouse-ci
+- name: run Lighthouse CI
+  run: |
+    npm install -g @lhci/cli@0.11.x
+    lhci collect
+# post performance summary and set the commit status
+# https://github.com/bahmutov/lhci-gha
+- name: Post performance summary 📊
+  run: npx post-summary --report-filename lighthouse-results.json
+```
+
+### post-summary
+
+Writes Lighthouse job summary
+
+![Performance job summary](./images/job-summary.png)
+
+- `--report-filename` Lighthouse performance JSON filename
+- `--title` summary table title
+
 ## Examples
 
 - [bahmutov/web-performance-example](https://github.com/bahmutov/web-performance-example)
