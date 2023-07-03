@@ -8,7 +8,8 @@
   ],
   "bin": {
     "post-summary": "./bin/post-summary.js",
-    "post-status": "./bin/post-commit-status.js"
+    "post-status": "./bin/post-commit-status.js",
+    "post-comment": "./bin/post-comment.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
