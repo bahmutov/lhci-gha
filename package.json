@@ -8,7 +8,8 @@
   ],
   "bin": {
     "post-summary": "./bin/post-summary.js",
-    "post-status": "./bin/post-commit-status.js"
+    "post-status": "./bin/post-commit-status.js",
+    "post-comment": "./bin/post-comment.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -36,6 +37,7 @@
     "@actions/core": "^1.10.0",
     "arg": "^5.0.2",
     "debug": "^4.3.4",
-    "got": "^11.8.6"
+    "got": "^11.8.6",
+    "octokit": "^2.1.0"
   }
 }

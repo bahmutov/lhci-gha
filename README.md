@@ -64,6 +64,10 @@ Usually for pull requests, you would use the head commit SHA
     PERSONAL_GH_TOKEN: ${{ secrets.PERSONAL_GH_TOKEN }}
 ```
 
+### post-comment
+
+![Posted comment](./images/comment.png)
+
 ## Examples
 
 - [bahmutov/web-performance-example](https://github.com/bahmutov/web-performance-example)
