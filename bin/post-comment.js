@@ -4,7 +4,7 @@
 
 const arg = require('arg')
 const debug = require('debug')('lhci-gha')
-const { postComment } = require('../src/post-comment')
+const { postPerformanceComment } = require('../src/post-comment')
 
 const args = arg({
   // Lighthouse performance JSON filename
@@ -32,8 +32,24 @@ if (!args['--report-filename']) {
 const options = {
   owner: args['--owner'],
   repo: args['--repo'],
-  reportFilename: args['--report-filename'],
-  title: args['--title'],
   issue: args['--issue'],
+  reportFilename: args['--report-filename'],
+  title: args['--title'] || 'Lighthouse performance',
+  body: 'comment body',
 }
-postComment(options)
+
+function checkEnvVariables(env) {
+  if (!env.GITHUB_TOKEN && !env.PERSONAL_GH_TOKEN) {
+    console.error(
+      'Cannot find environment variable GITHUB_TOKEN or PERSONAL_GH_TOKEN',
+    )
+    process.exit(1)
+  }
+}
+checkEnvVariables(process.env)
+
+const envOptions = {
+  token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
+}
+
+postPerformanceComment(options, envOptions)
