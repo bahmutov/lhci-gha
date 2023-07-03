@@ -33,12 +33,36 @@ This module provides 2 command line scripts. You should use these scripts _after
 
 ### post-summary
 
-Writes Lighthouse job summary
+Reads the Lighthouse JSON report and writes GitHub Lighthouse job summary
 
 ![Performance job summary](./images/job-summary.png)
 
 - `--report-filename` Lighthouse performance JSON filename
 - `--title` summary table title
+
+### post-status
+
+Reads the Lighthouse JSON report and sets the GitHub Commit status
+
+![Performance commit status](./images/commit-status.png)
+
+- `--report-filename` Lighthouse performance JSON filename
+- `--owner`: GitHub repo owner, like `bahmutov
+- `--repo`: GitHub repo name, like `web-performance-example`
+- `--commit`: Commit to set the status on
+
+Usually for pull requests, you would use the head commit SHA
+
+```yml
+- name: Post performance commit status ✅
+  run: |
+    npx post-status --min 90 \
+      --report-filename lighthouse-results.json \
+      --owner bahmutov --repo web-performance-example \
+      --commit ${{ github.event.pull_request.head.sha || github.sha }}
+  env:
+    PERSONAL_GH_TOKEN: ${{ secrets.PERSONAL_GH_TOKEN }}
+```
 
 ## Examples
 
