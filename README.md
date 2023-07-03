@@ -66,7 +66,17 @@ Usually for pull requests, you would use the head commit SHA
 
 ### post-comment
 
+Posts or updates a performance comment on specific issue or pull request
+
 ![Posted comment](./images/comment.png)
+
+- `--report-filename` Lighthouse performance JSON filename
+- `--owner` GitHub repo owner, like `bahmutov
+- `--repo` GitHub repo name, like `web-performance-example`
+- `--issue` pull request or issue number to comment on
+- `--title` the start of the comment body, like "Performance metric"
+
+This script checks all comments on PR to find the one that starts with "\*\*${title}" text, if found it updates it. Otherwise, it posts a new comment.
 
 ## Examples
 
