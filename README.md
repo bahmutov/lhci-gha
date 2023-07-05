@@ -47,9 +47,10 @@ Reads the Lighthouse JSON report and sets the GitHub Commit status
 ![Performance commit status](./images/commit-status.png)
 
 - `--report-filename` Lighthouse performance JSON filename
-- `--owner`: GitHub repo owner, like `bahmutov
-- `--repo`: GitHub repo name, like `web-performance-example`
-- `--commit`: Commit to set the status on
+- `--owner` GitHub repo owner, like `bahmutov
+- `--repo` GitHub repo name, like `web-performance-example`
+- `--commit` Commit to set the status on
+- `--target-url` Link to add to the commit status, usually to the job
 
 Usually for pull requests, you would use the head commit SHA
 
@@ -59,7 +60,8 @@ Usually for pull requests, you would use the head commit SHA
     npx post-status --min 90 \
       --report-filename lighthouse-results.json \
       --owner bahmutov --repo web-performance-example \
-      --commit ${{ github.event.pull_request.head.sha || github.sha }}
+      --commit ${{ github.event.pull_request.head.sha || github.sha }} \
+      --target-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
   env:
     PERSONAL_GH_TOKEN: ${{ secrets.PERSONAL_GH_TOKEN }}
 ```
