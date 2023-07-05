@@ -78,6 +78,18 @@ Posts or updates a performance comment on specific issue or pull request
 
 This script checks all comments on PR to find the one that starts with "\*\*${title}" text, if found it updates it. Otherwise, it posts a new comment.
 
+```yml
+- name: Post performance comment 📝
+  if: github.event.pull_request
+  run: |
+    npx post-comment \
+      --report-filename lighthouse-results.json \
+      --owner bahmutov --repo web-performance-example \
+      --pr ${{ github.event.pull_request.number }}
+  env:
+    PERSONAL_GH_TOKEN: ${{ secrets.PERSONAL_GH_TOKEN }}
+```
+
 ## Examples
 
 - [bahmutov/web-performance-example](https://github.com/bahmutov/web-performance-example)
