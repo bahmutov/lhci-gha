@@ -147,8 +147,12 @@ async function postPerformanceComment(options, envOptions) {
 
   // add the final performance score
   body += `${performanceAudit.title} | ${performance} | ${performanceSymbol}\n`
-  body +=
-    '\n[Trying Lighthouse](https://glebbahmutov.com/blog/trying-lighthouse/)'
+  if (options.targetUrl) {
+    body += `\n[extra information](${options.targetUrl})`
+  } else {
+    body +=
+      '\n[Trying Lighthouse](https://glebbahmutov.com/blog/trying-lighthouse/)'
+  }
 
   const commentOptions = {
     ...options,

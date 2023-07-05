@@ -13,6 +13,8 @@ const args = arg({
   '--title': String,
   // issue or pull request number
   '--issue': Number,
+  // option link to the job or extra information
+  '--target-url': String,
 
   // GitHub owner and repo
   '--owner': String,
@@ -21,6 +23,7 @@ const args = arg({
   // alias
   '-f': '--report-filename',
   '--pr': '--issue',
+  '--url': '--target-url',
 })
 debug('args %o', args)
 
@@ -36,6 +39,7 @@ const options = {
   reportFilename: args['--report-filename'],
   title: args['--title'] || 'Lighthouse performance',
   body: 'comment body',
+  targetUrl: args['--target-url'],
 }
 
 function checkEnvVariables(env) {
